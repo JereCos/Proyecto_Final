@@ -1,0 +1,17 @@
+body{
+    background-color: brown;
+}
+h1{
+    font-size: 48px;
+    display: inline-block;
+    background-color: rgb(195, 255, 0);
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-style: oblique;
+}
+img{
+    border-radius: 50%;
+    width: 350px;
+}
+td{
+    text-align: center;
+}
