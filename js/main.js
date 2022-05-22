@@ -20,8 +20,14 @@ let nombresUsuario = [];
 let passwordsUsuario = [];
 let productosNombre = [];
 
+
+//DOM
+const tarjeta = document.querySelector("#tarjeta");
+const finalizaCompra = document.querySelector("#finalizar")
+
+/*----------------------------------------Constructor y funciones para agregar e interactuar con usuarios---------------------------------------*/
 //clase constructora de usuario
-class usuario{
+class Usuario{
     constructor(nombre, password, permisos){
         this.nombre = nombre.toUpperCase();
         this.password = password;
@@ -29,78 +35,8 @@ class usuario{
     }
 }
 
-//clase constructora de productos
-class producto{
-    constructor(nombre, precio, descuento, vendido){
-        this.nombre = nombre.toUpperCase();
-        this.precio = precio;
-        this.descuento = descuento;
-        this.vendido = vendido;
-    }
-}
-
-//Función agregar producto
-function crearProducto(nombre, precio, descuento, vendido){
-    return new producto (nombre, precio, descuento, vendido);
-} 
-
-//función compra producto
-const comprarProducto = (nombreProducto, precio, descuento) => {
-    precioTotal += precio*descuento;
-    console.log("El parcial es " + precioTotal);
-    return (nombreProducto + " comprado/a");
-}
-
-//Función agregar productos al array productos
-const agregarProductos = (producto) => productos.push(producto);
-
-//función para compra
-function comprar (descuento){
-    do{
-        opcion = prompt("Seleccione un producto:\n\n1- Carpintería\n2- Almacen\n3- Bazar\n4- Farmacia\n5- Ferretería\no escriba CANCELAR para cancelar la compra. Escriba FINALIZAR para finalizar la compra")
-        if(opcion == "CANCELAR"){
-            alert ("Compra cancelada")
-            console.log("Compra cancelada");
-            compraFinalizada = false;
-        }else{  
-            switch (opcion){
-                case "1":
-                    console.log(comprarProducto("Madera", 100, descuento));
-                    agregarProductos(crearProducto("Madera", 100, descuento, true));
-                    compraFinalizada = true;
-                break;
-                case "2":
-                    console.log(comprarProducto("Arroz", 10, descuento));
-                    agregarProductos(crearProducto("Arroz", 10, descuento, true));
-                    compraFinalizada = true;
-                break;
-                case "3":
-                    console.log(comprarProducto("Sillón", 1000, descuento));
-                    agregarProductos(crearProducto("Sillón", 1000, descuento, true));
-                    compraFinalizada = true;
-                break;
-                case "4":
-                    console.log(comprarProducto("Migral", 150, descuento));
-                    agregarProductos(crearProducto("Migral", 150, descuento, true));
-                    compraFinalizada = true;
-                break;
-                case "5":
-                    console.log(comprarProducto("Foco", 50, descuento));
-                    agregarProductos(crearProducto("Foco", 50, descuento, true));
-                    compraFinalizada = true;
-                break;
-                case "FINALIZAR":
-                    compraFinalizada = false;
-                break;
-                default:
-                break;
-            }cantidadProductos += 1;
-        } 
-    }while(compraFinalizada);
-}
-
 //Función saludar usuario
-const saludarUsuario = (nombre) => alert("Bienvenida/o " + nombre);
+const saludarUsuario = (nombre) => console.log("Bienvenida/o " + nombre);
 
 //Función agregar usuario
 const agregarUsuario = (usuario) => usuarios.push(usuario);
@@ -111,95 +47,117 @@ const agregarNombresUsuario = (nombre) => nombresUsuario.push(nombre);
 //Función agregar contraseña a arreglo passwordsUsuario
 const agregarPasswordsUsuario = (password) => passwordsUsuario.push(password);
 
-//-----------------------------------------------------COMIENZO DE MAIN-----------------------------------------------------//
-
-//Generación de usuario
-while (finalizar){
-    finalizarNewUsuario = prompt("Desea agregar un nuevo usuario?\n- SI\n- NO")
-    if (finalizarNewUsuario == "SI"){
-        nombreUsuario = prompt("Por favor ingrese nuevo nombre de usuario (máximo 4 usuarios nuevos)");
-        do{
-            passwordUsuario = parseInt(prompt("Por favor ingrese nueva clave numérica para usuario"));
-            passwordCorrecto = isNaN(passwordUsuario);
-        }while(passwordCorrecto)
-        do{
-            permisosUsuario = prompt("Ingrese los permisos que va a tener este usuario\n - TOTAL\n - PARCIAL")
-            if(permisosUsuario == "TOTAL"){
-                permisoCorrecto = false;
-            }else if(permisosUsuario == "PARCIAL"){
-                permisoCorrecto = false;
-            }else{
-                permisoCorrecto = true;
-            }
-        }while(permisoCorrecto)
-    const usuarioNuevo = new usuario(nombreUsuario, passwordUsuario, permisosUsuario);
-    agregarUsuario(usuarioNuevo);
-    }else if (finalizarNewUsuario == "NO"){
-        finalizar = false;
-    }else{
-        finalizar = true;
+/*----------------------------------------Constructor y funciones para agregar productos al catalogo--------------------------------------------*/
+//clase constructora de productos
+class Producto{
+    constructor(nombre, precio, descuento, vendido){
+        this.nombre = nombre.toUpperCase();
+        this.precio = precio;
+        this.descuento = descuento;
+        this.vendido = vendido;
     }
 }
 
-console.log(usuarios);
-for (const iterator of usuarios) {
-    agregarNombresUsuario(iterator.nombre);
-}
-for (const iterator of usuarios) {
-    agregarPasswordsUsuario(iterator.password);
-}
+//Función agregar producto
+function crearProducto(nombre, precio, descuento, vendido){
+    return new Producto (nombre, precio, descuento, vendido);
+} 
 
-console.log(nombresUsuario);
-console.log(passwordsUsuario);
+//Función agregar productos al array productos
+const agregarProductos = (producto) => productos.push(producto);
 
-//Login de usuario creado
-for (let i = 0; i < limitRetry; i++) {
-    let usuarioName = prompt("Ingrese usuario").toUpperCase();
-    let contrasenia = parseInt(prompt("Ingrese contraseña"));
-    if ((usuarioName == nombresUsuario[0] || usuarioName == nombresUsuario[1] || usuarioName == nombresUsuario[2] || usuarioName == nombresUsuario[3]) && (contrasenia == passwordsUsuario[0] || contrasenia == passwordsUsuario[1] || usuarioName == nombresUsuario[2]  || usuarioName == nombresUsuario[3])){
-        saludarUsuario(usuarioName);
-        i = 10;
-        flagLogueo = true;
-    }else{
-        alert ("Usuario incorrecto");
-        flagLogueo = false;
-    }
+//función compra producto
+const comprarProducto = (nombreProducto, precio, id) => {
+    precioTotal += precio;
+    console.log("El parcial es " + precioTotal);
+    return (nombreProducto + " agregado al carrito");
 }
 
-//Control de login
-if (flagLogueo == true){
-    alert("Login exitoso")
-    console.log("Login exitoso");
-    //Compra de producto con permisos TOTAL o PARCIAL
-    if(permisosUsuario == "TOTAL"){
-        comprar(0.5);
-    }else{
-        comprar(1.00);     
-    }
-//Carga de nombres al array productosNombre
-    for (const iterator of productos) {
-        productosNombre.push(iterator.nombre);
-    }
-
-//Separación de items en array productosNombre por ','
-productosNombre.join(", ");
-
-    //Finalizar compra por FINALIZAR o por CANCELAR
-    if (opcion != "CANCELAR"){
-        alert("El total de la compra es $" + precioTotal + " por la compra de " + cantidadProductos + " productos.");
-        console.log("El total de la compra es $" + precioTotal + " por la compra de " + cantidadProductos + " productos.");
-        console.log(productos);
-        console.log(productosNombre); 
-        alert("Los productos comprados son " + productosNombre)
-        console.log("Los productos comprados son " + productosNombre); 
-    }else{
-        alert("La compra fue cancelada.");
-        console.error("La compra fue cancelada.");
-        productos = [];
-        console.log(productos);
-        console.log("Los productos retirados del carrito son " + productosNombre); 
-    }    
-}else{
-    alert("Falla en el login");
-    console.error("Falla en el login");
+//función para agregar producto comprado al array nombreProductos
+function finalizarCompra (){
+    console.log("El total de su compra es " + precioTotal);
+    precioTotal = 0;
 }
+
+//Función para crear tarjeta de producto
+function crearTarjetaProducto (producto){
+
+    let tarjetaHtml;
+       
+        tarjetaHtml = `
+            <div class="row">
+                <div class="col s12 m7">
+                <div class="card">
+                    <div class="card-image">
+                    <img src=${producto.img}>
+                    </div>
+                    <div>
+                    <span class="card-title">${producto.nombreProducto}</span>
+                    </div>
+                    <div class="card-content">
+                    <p>$${producto.precio}</p>
+                    </div>
+                    <div class="card-action">
+                    <button id="btnComprar" class="waves-effect waves-light btn" type="submit">Comprar</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+        `
+    tarjeta.innerHTML += tarjetaHtml;
+
+}
+
+//----------------------------------------------------COMIENZO DE MAIN-----------------------------------------------------//
+//Productos hardcodeados
+productos = [
+        {id: 1, nombreProducto: "Arroz", precio: 100, img: "./img/almacen1.png"},
+        {id: 2, nombreProducto: "Azúcar", precio: 70, img: "./img/almacen2.jpg"},
+        {id: 3, nombreProducto: "Pan", precio: 120, img: "./img/almacen3.png"},
+        {id: 4, nombreProducto: "Queso Cremoso", precio: 200, img: "./img/almacen4.jpg"},
+        {id: 5, nombreProducto: "Dulce de leche", precio: 250, img: "./img/almacen1.png"},
+        {id: 6, nombreProducto: "Galletas", precio: 150, img: "./img/almacen2.jpg"},
+        {id: 7, nombreProducto: "Mermelada", precio: 230, img: "./img/almacen3.png"},
+        {id: 8, nombreProducto: "Aceite", precio: 190, img: "./img/almacen4.jpg"},
+        {id: 9, nombreProducto: "Lavandina", precio: 125, img: "./img/almacen1.png"},
+        {id: 10, nombreProducto: "Detergente", precio: 300, img: "./img/almacen2.jpg"},
+        {id: 11, nombreProducto: "Pure de Tomate", precio: 90, img: "./img/almacen3.png"},
+        {id: 12, nombreProducto: "Yerba", precio: 270, img: "./img/almacen4.jpg"},
+];
+
+console.log("Productos disponibles: " + JSON.stringify(productos));
+
+//Crea tarjetas a partir de la cantidad de productos
+for (const producto of productos) {
+    crearTarjetaProducto(producto);   
+}    
+
+//Selecciona cada botón de tarjeta
+const btnComprar = document.querySelectorAll(".waves-effect.waves-light.btn");
+
+//Compra cada producto por el botón
+for (let i = 0; i < btnComprar.length; i++) {
+btnComprar[i].addEventListener("click", function (e){
+    e.preventDefault();
+    console.log(comprarProducto(productos[i].nombreProducto, productos[i].precio, productos[i].id));        
+})   
+}
+
+//Crear botón finalizar compra de manera dinámica
+let btnFinaliza = document.createElement("button");
+let btnFinalizaToast = document.querySelector("#toast")
+
+
+function showToast (){
+    btnFinalizaToast.className = "show";
+    setTimeout(function(){ btnFinalizaToast.className = btnFinalizaToast.className.replace("show", ""); }, 5000);
+    btnFinalizaToast.textContent = "El total de su compra es " + precioTotal;
+}
+
+btnFinaliza.innerHTML = `<button id="btnfinalizar" onclick = "showToast()" class="waves-effect waves-light btn" type="submit">Finalizar compra</button>`
+finalizaCompra.appendChild(btnFinaliza);
+
+btnFinaliza.addEventListener("click", function (e) {
+    e.preventDefault();
+    finalizarCompra();
+})
