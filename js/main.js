@@ -1,4 +1,4 @@
-/*JS que simula la creación de usuario, login y posterior compra. Si el permiso que se le otorga al usuario es TOTAL tendrá mejores descuentos.*/
+/*JS que contiene los datos de la main page de html con los productos que se pueden comprar y */
 
 //Declaración de variables globales
 let limitRetry = 3;
@@ -19,11 +19,16 @@ let finalizar = true;
 let nombresUsuario = [];
 let passwordsUsuario = [];
 let productosNombre = [];
-
+let carrito = [];
+let mostrarCarrito = [];
+let carritoPrecios = [];
 
 //DOM
 const tarjeta = document.querySelector("#tarjeta");
 const finalizaCompra = document.querySelector("#finalizar")
+//Crear botón finalizar compra de manera dinámica
+let btnFinaliza = document.createElement("button");
+let btnFinalizaToast = document.querySelector("#toast")
 
 /*----------------------------------------Constructor y funciones para agregar e interactuar con usuarios---------------------------------------*/
 //clase constructora de usuario
@@ -98,7 +103,7 @@ function crearTarjetaProducto (producto){
                     <p>$${producto.precio}</p>
                     </div>
                     <div class="card-action">
-                    <button id="btnComprar" class="waves-effect waves-light btn" type="submit">Comprar</button>
+                    <button id="btnComprar" onclick = "showProductoAgregado()" class="waves-effect waves-light btn" type="submit">Comprar</button>
                     </div>
                 </div>
                 </div>
@@ -106,6 +111,49 @@ function crearTarjetaProducto (producto){
         `
     tarjeta.innerHTML += tarjetaHtml;
 
+}
+
+/*----------------------------------------------Funciones para agregar productos al carrito--------------------------------------------*/
+
+//Función mostrar popup de producto agregado al carrito
+function showProductoAgregado (nombreAgregado){
+    btnFinalizaToast.className = "show";
+    setTimeout(function(){ btnFinalizaToast.className = btnFinalizaToast.className.replace("show", ""); }, 750);
+    btnFinalizaToast.textContent = nombreAgregado + " agregado al carrito";
+}
+
+//Función agregar productos al array carrito
+const agregarCarrito = (producto) => {
+    carrito.push(producto);
+    localStorage.setItem("carrito", carrito);
+}
+
+//Función agregar productos al array carrito
+const agregarCarritoPrecio = (producto) => {
+    carritoPrecios.push(producto);
+    localStorage.setItem("precio", carritoPrecios); 
+}
+
+//Función mostrar popup de compra finalizada
+function showToast (){
+    btnFinalizaToast.className = "show";
+    setTimeout(function(){ btnFinalizaToast.className = btnFinalizaToast.className.replace("show", ""); }, 5000);
+    btnFinalizaToast.textContent = "El total de su compra es $" + precioTotal;
+}
+
+//Función mostrar carrito como array
+function showCarrito (){
+    mostrarCarrito = localStorage.getItem("carrito")
+    let auxiliar = mostrarCarrito.split (",");
+    console.log(auxiliar)
+    for (const producto of auxiliar) {
+        console.log(producto);
+    }
+}
+
+//Función para quitar todos los productos del carrito
+function limpiarCarrito (){
+    mostrarCarrito = localStorage.clear("carrito");
 }
 
 //----------------------------------------------------COMIENZO DE MAIN-----------------------------------------------------//
@@ -139,19 +187,13 @@ const btnComprar = document.querySelectorAll(".waves-effect.waves-light.btn");
 for (let i = 0; i < btnComprar.length; i++) {
 btnComprar[i].addEventListener("click", function (e){
     e.preventDefault();
-    console.log(comprarProducto(productos[i].nombreProducto, productos[i].precio, productos[i].id));        
+    console.log(comprarProducto(productos[i].nombreProducto, productos[i].precio, productos[i].id)); 
+    showProductoAgregado(productos[i].nombreProducto);
+    agregarCarrito(productos[i].nombreProducto);
+    agregarCarritoPrecio(productos[i].precio);
+    console.log(carrito)
+    console.log(mostrarCarrito);     
 })   
-}
-
-//Crear botón finalizar compra de manera dinámica
-let btnFinaliza = document.createElement("button");
-let btnFinalizaToast = document.querySelector("#toast")
-
-
-function showToast (){
-    btnFinalizaToast.className = "show";
-    setTimeout(function(){ btnFinalizaToast.className = btnFinalizaToast.className.replace("show", ""); }, 5000);
-    btnFinalizaToast.textContent = "El total de su compra es " + precioTotal;
 }
 
 btnFinaliza.innerHTML = `<button id="btnfinalizar" onclick = "showToast()" class="waves-effect waves-light btn" type="submit">Finalizar compra</button>`
@@ -160,4 +202,8 @@ finalizaCompra.appendChild(btnFinaliza);
 btnFinaliza.addEventListener("click", function (e) {
     e.preventDefault();
     finalizarCompra();
+    showCarrito();
+    limpiarCarrito();
+    carrito = [];
+    mostrarCarrito = [];
 })
